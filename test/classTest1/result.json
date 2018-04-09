@@ -1,0 +1,19 @@
+{
+    "foo": {
+        "modifiers": {
+            "dark": true
+        },
+        "elements": {
+            "head": {},
+            "tail": {
+                "light": true
+            }
+        }
+    },
+    "bar": {
+        "modifiers": {
+            "desert": true
+        },
+        "elements": {}
+    }
+}

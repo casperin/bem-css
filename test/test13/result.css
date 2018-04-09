@@ -1,0 +1,9 @@
+.foo {
+    color: red;
+}
+.foo .foo__el1 {
+    color: blue;
+}
+.foo .foo__el2 {
+    color: green;
+}

@@ -1,0 +1,20 @@
+{
+    "name": "bem-css",
+    "version": "0.0.1",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/casperin/bem-css.git"
+    },
+    "scripts": {
+        "test": "node test",
+        "prettier": "prettier --no-semi --tab-width=4 --write \"{src,make,test}/**/*.js\""
+    },
+    "devDependencies": {
+        "glob": "^7.1.2",
+        "lodash": "^4.17.5",
+        "prettier": "^1.11.1",
+        "tape": "^4.9.0",
+        "tape-promise": "^3.0.0"
+    }
+}
