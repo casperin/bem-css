@@ -1,6 +1,15 @@
-const _ = require("lodash")
+const cssProperties = {
+    cssProp: (name, ...args) => {
+        const arg = args
+            .map(a => (typeof a !== "number" ? `${a}` : `${a}px`))
+            .join(" ")
 
-const cssProperties = {}
+        return {
+            type: "CSS property",
+            value: `${name}: ${arg}`
+        }
+    }
+}
 
 const fnNames = [
     "animation",
@@ -175,7 +184,7 @@ const fnNames = [
 for (const item of fnNames) {
     const [fnName, opt = {}] = Array.isArray(item) ? item : [item]
 
-    cssProperties[_.camelCase(fnName)] = (...args) => {
+    cssProperties[camelCase(fnName)] = (...args) => {
         const arg = args
             .map(a => (typeof a !== "number" ? `${a}` : `${a}px`))
             .join(" ")
@@ -185,6 +194,13 @@ for (const item of fnNames) {
             value: `${fnName}: ${arg}`
         }
     }
+}
+
+function camelCase (str) {
+    return str
+        .split("-")
+        .map((s, i) => i ? s[0].toUpperCase() + s.substr(1) : s)
+        .join("")
 }
 
 module.exports = cssProperties
