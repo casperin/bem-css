@@ -38,11 +38,11 @@ function mapArguments(args) {
 
     for (const arg of args) {
         const v = arrToCSS(arg)
-        if (v.type === "css" || v.type === "pseudo") {
+        if (v.type === "css") {
             result[v.type] = v
             continue
         }
-        if (v.type === "element" || v.type === "modifier") {
+        if (v.type === "pseudo" || v.type === "element" || v.type === "modifier") {
             if (!result[v.type + "s"]) {
                 result[v.type + "s"] = []
             }

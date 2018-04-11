@@ -22,14 +22,16 @@ module.exports = function parseElements(sel, elements = [], warnings) {
         }
 
         // .block .block__element:pseudo
-        if (e.pseudo) {
-            const selectors = e.pseudo.names
-                .map(pseudo => `${selector}${pseudo}`)
-                .join(",\n")
+        if (e.pseudos) {
+            for (const pseudo of e.pseudos) {
+                const selectors = pseudo.names
+                    .map(pseudo => `${selector}${pseudo}`)
+                    .join(",\n")
 
-            out.block_blockElementPseudo.push(
-                util.cssToString(selectors, e.pseudo.css.properties)
-            )
+                out.block_blockElementPseudo.push(
+                    util.cssToString(selectors, pseudo.css.properties)
+                )
+            }
         }
 
         // .block .block__element--modifier

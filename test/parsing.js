@@ -19,6 +19,7 @@ const tests = [
     ["test11", "Multiple files"],
     ["test12", "Warns if files with same name", { warn: true }],
     ["test13", "Can handle multiple elements"],
+    ["test14", "Can handle multiple pseudos"],
     ["_gone_", "Errors if not given a path to a dir", { error: true }]
 ]
 
