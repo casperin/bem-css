@@ -48,3 +48,11 @@ for (const [dn, title, opt = {}] of tests) {
         t.equal(actual.trim(), expected, "actual should equal result.css")
     })
 }
+
+tape("Don't accept undefined as css property", t => {
+    t.plan(1)
+    const dir = path.join(__dirname, "css-prop-undefined")
+    make(dir)
+        .then(_ => t.fail("Did not throw"))
+        .catch(_ => t.pass("Threw when css prop was undefined"))
+})

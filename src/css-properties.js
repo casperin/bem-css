@@ -185,13 +185,17 @@ for (const item of fnNames) {
     const [fnName, opt = {}] = Array.isArray(item) ? item : [item]
 
     cssProperties[camelCase(fnName)] = (...args) => {
-        const arg = args
-            .map(a => (typeof a !== "number" ? `${a}` : `${a}px`))
-            .join(" ")
+        const values = []
+        for (const a of args) {
+            if (a == null || a == "") {
+                throw new Error(`You tried to set ${fnName}: ${a} for one of your components`)
+            }
+            values.push(typeof a === "number" ? `${a}px` : `${a}`)
+        }
 
         return {
             type: "CSS property",
-            value: `${fnName}: ${arg}`
+            value: `${fnName}: ${values.join(" ")}`
         }
     }
 }

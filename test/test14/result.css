@@ -1,0 +1,6 @@
+.foo:hover {
+    color: blue;
+}
+.foo:active {
+    color: red;
+}
