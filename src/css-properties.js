@@ -187,7 +187,7 @@ for (const item of fnNames) {
     cssProperties[camelCase(fnName)] = (...args) => {
         const values = []
         for (const a of args) {
-            if (a == null || a == "") {
+            if (typeof a !== "number" && !a) {
                 throw new Error(`You tried to set ${fnName}: ${a} for one of your components`)
             }
             values.push(typeof a === "number" ? `${a}px` : `${a}`)

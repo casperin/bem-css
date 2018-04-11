@@ -1,1 +1,1 @@
-module.exports = block(pseudo(":hover", [color("red")]))
+module.exports = block(pseudo(":hover", [margin(0)]))
