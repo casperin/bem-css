@@ -43,33 +43,53 @@ function checkIfExists(block, elem, mods) {
         return
     }
     if (!opt.bemTree[block]) {
-        return barf(block)
+        opt.warn(
+            `Could not find ${block}. I have:`,
+            Object.keys(opt.bemTree).join(`, `)
+        )
+        return
     }
     if (!elem) {
         if (mods) {
             for (const m of mods) {
-                if (!opt.bemTree[block].modifiers || !opt.bemTree[block].modifiers[m]) {
-                    return barf(`${block}--${m}`)
+                const ms = opt.bemTree[block].modifiers
+                if (!ms || !ms[m]) {
+                    opt.warn(
+                        `Found ${block}, but not ${block}--${m}. I have:`,
+                        ms
+                            ?  Object.keys(ms).map(m => `${block}--${m}`).join(`, `)
+                            : `none`
+                    )
+                    return
                 }
             }
         }
         return
     }
 
-    if (!opt.bemTree[block].elements || !opt.bemTree[block].elements[elem]) {
-        return barf(`${block}__${elem}`)
+    const bes = opt.bemTree[block].elements
+    if (!bes || !bes[elem]) {
+        opt.warn(
+            `Found ${block}, but not ${block}__${elem}. I have`,
+            bes
+                ?  Object.keys(bes).map(e => `${block}__${e}`).join(`, `)
+                : `no elements under ${block}`
+        )
+        return
     }
     if (!mods) {
         return
     }
     for (const m of mods) {
-        const e = opt.bemTree[block].elements[elem]
-        if (!e.modifiers || !e.modifiers[m]) {
-            return barf(`${block}__${elem}--${m}`)
+        const em = opt.bemTree[block].elements[elem].modifiers
+        if (!em || !em[m]) {
+            opt.warn(
+                `Found ${block}__${elem}, but not the ${m} modifier. I have`,
+                em
+                    ? `these: ` +  Object.keys(em).map(m => `${block}__${elem}--${m}`).join(`, `)
+                    : `no modifiers`
+            )
+            return
         }
     }
-}
-
-function barf(sel) {
-    opt.warn(`Could not find ${sel} in the bemTree that you provided:`, opt.bemTree)
 }
