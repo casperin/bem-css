@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset=utf-8>
+        <title>Try bem-css</title>
+        <style>
+        body {
+            margin: 0;
+        }
+        .warnings {
+            background: #fea;
+            padding: 5px;
+            margin: 0;
+        }
+        .warnings:empty {
+            padding: 0;
+        }
+        .editor {
+            display: flex;
+            height: 100vh;
+        }
+        .editor__input, .editor__code, .editor__output {
+            flex: 1;
+            margin: 0;
+            padding: 10px;
+            font-size: 13px;
+            overflow: auto;
+        }
+        </style>
+    </head>
+    <body>
+        <pre class=warnings id=warnings></pre>
+        <div class=editor>
+            <textarea class=editor__input id=input>block(
+  [
+    color("red"),
+    margin(10)
+  ],
+
+  pseudo(
+    [":hover", ":active"],
+    [color("blue")]
+  ),
+
+  element("header", [
+    marginBottom(5),
+    fontWeight("bold")
+  ]),
+
+  element(
+    "content",
+    [
+      padding(10, 5)
+    ],
+    modifier("big", [
+      padding(20, 10)
+    ])
+  )
+)</textarea>
+            <pre class=editor__code id=code></pre>
+            <pre class=editor__output id=output></pre>
+        </div>
+    </body>
+    <script>
+document.getElementById("input").addEventListener("keyup", debounce(handleInput, 200))
+
+function debounce(fn, wait) {
+    var timeout;
+    return function() {
+        var context = this
+        var args = arguments
+
+        clearTimeout(timeout)
+
+        timeout = setTimeout(function() {
+            fn.apply(context, args)
+        }, wait)
+    }
+}
+
+function handleInput(e) {
+    fetch("/parse?code=" + e.target.value)
+        .then(resp => resp.json())
+        .then(({code, css, warnings, error}) => {
+            if (error) {
+                console.error(error)
+                return
+            }
+            document.getElementById("code").innerHTML = JSON.stringify(code, null, 4)
+            document.getElementById("output").innerHTML = css
+            document.getElementById("warnings").innerHTML = warnings.join("\n")
+        })
+}
+    </script>
+</html>

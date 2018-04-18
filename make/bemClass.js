@@ -1,15 +1,24 @@
 module.exports = function makeBemClass(block) {
-    const out = { modifiers: {}, elements: {} }
-
-    for (const m of block.modifiers || []) {
-        out.modifiers[m.name] = true
+    const out = {
+        modifiers: {},
+        elements: {}
     }
 
-    for (const e of block.elements || []) {
-        out.elements[e.name] = {}
+    for (const m of block.modifiers) {
+        for (const name of m.names) {
+            out.modifiers[name] = true
+        }
+    }
 
-        for (const m of e.modifiers || []) {
-            out.elements[e.name][m.name] = true
+    for (const e of block.elements) {
+        for (const name of e.names) {
+            out.elements[name] = {}
+
+            for (const m of e.modifiers) {
+                for (const mName of m.names) {
+                    out.elements[name][mName] = true
+                }
+            }
         }
     }
 

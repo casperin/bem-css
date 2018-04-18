@@ -1,3 +1,4 @@
-require('./parsing')
-require('./bemClass')
+require("./parsing")
+require("./bemClass")
 require("./cx")
+require("./util")

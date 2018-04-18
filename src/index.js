@@ -2,55 +2,74 @@ const cssProperties = require("./css-properties")
 
 const c = (exports.c = Object.assign({}, cssProperties))
 
-c.css = function css(properties) {
-    return {
-        type: "css",
-        properties
-    }
-}
-
-c.pseudo = function pseudo(names, ...rest) {
-    return Object.assign(
-        {
-            type: "pseudo",
-            names: Array.isArray(names) ? names : [names]
-        },
-        mapArguments(rest)
-    )
-}
-
-c.block = c.B = function block(...args) {
-    return Object.assign({ type: "block" }, mapArguments(args))
-}
-
-c.element = c.E = function element(name, ...rest) {
-    return Object.assign({ type: "element", name }, mapArguments(rest))
-}
-
-c.modifier = c.M = function modifier(name, ...rest) {
-    return Object.assign({ type: "modifier", name }, mapArguments(rest))
-}
+const toArr = x => (Array.isArray(x) ? x : [x])
 
 const arrToCSS = value => (Array.isArray(value) ? c.css(value) : value)
 
-function mapArguments(args) {
-    const result = {}
+c.css = function css(values) {
+    const out = {
+        type: "css",
+        values: [],
+        warnings: []
+    }
+    for (const value of values) {
+        if (value.warning) {
+            out.warnings.push(value.warning)
+            continue
+        }
+        out.values.push(value.property)
+    }
+    return out
+}
 
+c.pseudo = c.P = function pseudo(names, ...rest) {
+    return mapArguments("pseudo", names, rest, ["csss", "elements"])
+}
+
+c.modifier = c.M = function modifier(names, ...rest) {
+    return mapArguments("modifier", names, rest, [
+        "csss",
+        "pseudos",
+        "elements"
+    ])
+}
+
+c.element = c.E = function element(names, ...rest) {
+    return mapArguments("element", names, rest, [
+        "csss",
+        "pseudos",
+        "modifiers"
+    ])
+}
+
+c.block = c.B = function block(...rest) {
+    return mapArguments("block", null, rest, [
+        "csss",
+        "pseudos",
+        "modifiers",
+        "elements"
+    ])
+    // TODO: Get warnings up on the block level
+}
+
+function mapArguments(type, names, args, allows) {
+    const start = { type, warnings: [] }
+    if (names) start.names = toArr(names)
+    const out = allows.reduce(
+        (acc, allow) => Object.assign(acc, { [allow]: [] }),
+        start
+    )
     for (const arg of args) {
         const v = arrToCSS(arg)
-        if (v.type === "css") {
-            result[v.type] = v
+        if (!out[v.type + "s"]) {
+            out.warnings.push(
+                `You tried to put a ${v.type}, but only ${allows.join(
+                    ", "
+                )} are allowed`
+            )
             continue
         }
-        if (v.type === "pseudo" || v.type === "element" || v.type === "modifier") {
-            if (!result[v.type + "s"]) {
-                result[v.type + "s"] = []
-            }
-            result[v.type + "s"].push(v)
-            continue
-        }
-        throw new Error("You gave us something weird man")
+        out[v.type + "s"].push(v)
     }
-
-    return result
+    return out
 }

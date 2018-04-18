@@ -42,16 +42,18 @@ module.exports = async function make(p, opt = {}) {
             warnings.push(errors.duplicateBlock(name, seenNames[name], p))
             continue
         }
-        seenNames[name] = p
 
         const block = require(p)
         if (block.type !== "block") {
             continue
         }
 
-        const css = parseBlock(name, block, opt)
+        seenNames[name] = p
+
+        const [css, warnings_] = parseBlock(name, block, opt)
         cssAll.push(css)
         cssSingle[name] = css
+        warnings.push(...warnings_)
         bemClasses[name] = makeBemClass(block)
     }
 

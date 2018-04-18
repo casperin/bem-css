@@ -68,21 +68,23 @@ const tests = [
     },
     {
         desc: "cx: With bemTree, missing element mod",
-        confOpt: { bemTree: {
-            block: {
-                elements: { el: {} }
+        confOpt: {
+            bemTree: {
+                block: {
+                    elements: { el: {} }
+                }
             }
-        } },
+        },
         input: ["block", "el", ["mod"]],
         expected: "block__el block__el--mod",
         expectedWarning: true
-    },
+    }
 ]
 
 for (const test of tests) {
     tape(test.desc, t => {
         t.plan(test.expectedWarning ? 2 : 1)
-        cx.configure(Object.assign({}, test.confOpt, {warn: _ => t.pass()}))
+        cx.configure(Object.assign({}, test.confOpt, { warn: _ => t.pass() }))
         const actual = cx(...test.input)
         t.equal(actual, test.expected)
         cx.reset()

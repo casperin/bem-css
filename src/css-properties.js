@@ -1,16 +1,3 @@
-const cssProperties = {
-    cssProp: (name, ...args) => {
-        const arg = args
-            .map(a => (typeof a !== "number" ? `${a}` : `${a}px`))
-            .join(" ")
-
-        return {
-            type: "CSS property",
-            value: `${name}: ${arg}`
-        }
-    }
-}
-
 const fnNames = [
     "animation",
     "animation-delay",
@@ -181,29 +168,31 @@ const fnNames = [
     "box-sizing"
 ]
 
-for (const item of fnNames) {
-    const [fnName, opt = {}] = Array.isArray(item) ? item : [item]
+const cssProperties = {}
 
-    cssProperties[camelCase(fnName)] = (...args) => {
-        const values = []
-        for (const a of args) {
-            if (typeof a !== "number" && !a) {
-                throw new Error(`You tried to set ${fnName}: ${a} for one of your components`)
-            }
-            values.push(typeof a === "number" ? `${a}px` : `${a}`)
-        }
-
-        return {
-            type: "CSS property",
-            value: `${fnName}: ${values.join(" ")}`
-        }
-    }
+for (const name of fnNames) {
+    cssProperties[camelCase(name)] = (...args) => sanitizeCssProp(name, ...args)
 }
 
-function camelCase (str) {
+cssProperties.cssProp = sanitizeCssProp
+
+function sanitizeCssProp(name, ...args) {
+    const values = []
+    const out = { property: name + ":" }
+    for (const a of args) {
+        if (typeof a !== "number" && !a) {
+            out.warning = `You tried to set "${name}: ${a};"`
+        }
+        out.property += typeof a === "number" ? ` ${a}px` : ` ${a}`
+    }
+    out.property += ";"
+    return out
+}
+
+function camelCase(str) {
     return str
         .split("-")
-        .map((s, i) => i ? s[0].toUpperCase() + s.substr(1) : s)
+        .map((s, i) => (i ? s[0].toUpperCase() + s.substr(1) : s))
         .join("")
 }
 

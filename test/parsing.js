@@ -20,7 +20,12 @@ const tests = [
     ["test12", "Warns if files with same name", { warn: true }],
     ["test13", "Can handle multiple elements"],
     ["test14", "Can handle multiple pseudos"],
-    ["_gone_", "Errors if not given a path to a dir", { error: true }]
+    ["_gone_", "Errors if not given a path to a dir", { error: true }],
+    [
+        "css-prop-undefined",
+        "Warns if setting a css prop to undefined",
+        { warn: true }
+    ]
 ]
 
 for (const [dn, title, opt = {}] of tests) {
@@ -48,11 +53,3 @@ for (const [dn, title, opt = {}] of tests) {
         t.equal(actual.trim(), expected, "actual should equal result.css")
     })
 }
-
-tape("Don't accept undefined as css property", t => {
-    t.plan(1)
-    const dir = path.join(__dirname, "css-prop-undefined")
-    make(dir)
-        .then(_ => t.fail("Did not throw"))
-        .catch(_ => t.pass("Threw when css prop was undefined"))
-})

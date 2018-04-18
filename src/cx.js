@@ -57,7 +57,9 @@ function checkIfExists(block, elem, mods) {
                     opt.warn(
                         `Found ${block}, but not ${block}--${m}. I have:`,
                         ms
-                            ?  Object.keys(ms).map(m => `${block}--${m}`).join(`, `)
+                            ? Object.keys(ms)
+                                  .map(m => `${block}--${m}`)
+                                  .join(`, `)
                             : `none`
                     )
                     return
@@ -72,7 +74,9 @@ function checkIfExists(block, elem, mods) {
         opt.warn(
             `Found ${block}, but not ${block}__${elem}. I have`,
             bes
-                ?  Object.keys(bes).map(e => `${block}__${e}`).join(`, `)
+                ? Object.keys(bes)
+                      .map(e => `${block}__${e}`)
+                      .join(`, `)
                 : `no elements under ${block}`
         )
         return
@@ -86,7 +90,10 @@ function checkIfExists(block, elem, mods) {
             opt.warn(
                 `Found ${block}__${elem}, but not the ${m} modifier. I have`,
                 em
-                    ? `these: ` +  Object.keys(em).map(m => `${block}__${elem}--${m}`).join(`, `)
+                    ? `these: ` +
+                      Object.keys(em)
+                          .map(m => `${block}__${elem}--${m}`)
+                          .join(`, `)
                     : `no modifiers`
             )
             return

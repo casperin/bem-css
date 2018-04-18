@@ -1,3 +1,1 @@
-module.exports = block([
-    color(undefined)
-])
+module.exports = block([color(undefined)])
