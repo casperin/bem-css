@@ -3,7 +3,7 @@ const errors = require("./errors")
 const defaultOptions = require("./defaultOptions")
 const { c } = require("../src")
 const parseBlock = require("./parse")
-const makeBemClass = require("./bemClass")
+const makeBemTree = require("./bemClass")
 
 module.exports = async function make(p, opt = {}) {
     const warnings = []
@@ -54,7 +54,11 @@ module.exports = async function make(p, opt = {}) {
         cssAll.push(css)
         cssSingle[name] = css
         warnings.push(...warnings_)
-        bemClasses[name] = makeBemClass(block)
+
+        const nameWithPrefix = opt.blockPrefix
+            ? opt.blockPrefix + '-' + name
+            : name
+        bemClasses[nameWithPrefix] = makeBemTree(block)
     }
 
     return [cssAll.join("\n\n"), cssSingle, bemClasses, warnings, null]

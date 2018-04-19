@@ -1,0 +1,13 @@
+{
+    "xx-foo": {
+        "modifiers": {
+            "dark": true
+        },
+        "elements": {
+            "head": {},
+            "tail": {
+                "light": true
+            }
+        }
+    }
+}

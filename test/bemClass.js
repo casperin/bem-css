@@ -11,3 +11,10 @@ tape("bemClass parsing", async function(t) {
     const expected = require("./classTest1/result.json")
     t.deepEqual(bc, expected)
 })
+
+tape("bemClass with prefix", async function(t) {
+    const opt = {blockPrefix: 'xx'}
+    const [_1, _2, bc, _3, _4] = await make(path.join(__dirname, "classTest2"), opt)
+    const expected = require("./classTest2/result.json")
+    t.deepEqual(bc, expected)
+})
