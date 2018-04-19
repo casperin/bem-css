@@ -1,6 +1,7 @@
 const defaultOpt = {
     strict: true,
     bemTree: null,
+    prefix: '',
     warn: (...msg) => console.warn(...msg)
 }
 let opt = defaultOpt
@@ -18,7 +19,7 @@ function cx(...args) {
     if (!args.length) {
         return ""
     }
-    const block = args[0]
+    const block = opt.prefix ? `${opt.prefix}-${args[0]}` : args[0]
     const elem = typeof args[1] === "string" ? args[1] : null
     let mods = typeof args[1] === "string" ? args[2] : args[1]
     if (mods && {}.toString.call(mods).slice(8, -1) === "Object") {

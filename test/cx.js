@@ -78,6 +78,30 @@ const tests = [
         input: ["block", "el", ["mod"]],
         expected: "block__el block__el--mod",
         expectedWarning: true
+    },
+    {
+        desc: "cx: With prefix block",
+        confOpt: {
+            prefix: "pref"
+        },
+        input: ["block"],
+        expected: "pref-block"
+    },
+    {
+        desc: "cx: With prefix block__el",
+        confOpt: {
+            prefix: "x"
+        },
+        input: ["block", "el"],
+        expected: "x-block__el"
+    },
+    {
+        desc: "cx: With prefix modification",
+        confOpt: {
+            prefix: "xx"
+        },
+        input: ["block", "el", ["mod1", "mod2"]],
+        expected: "xx-block__el xx-block__el--mod1 xx-block__el--mod2"
     }
 ]
 
