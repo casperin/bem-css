@@ -108,9 +108,8 @@ const tests = [
 for (const test of tests) {
     tape(test.desc, t => {
         t.plan(test.expectedWarning ? 2 : 1)
-        cx.configure(Object.assign({}, test.confOpt, { warn: _ => t.pass() }))
-        const actual = cx(...test.input)
+        const myCx = cx.configure(Object.assign({}, test.confOpt, { warn: t.pass }))
+        const actual = myCx(...test.input)
         t.equal(actual, test.expected)
-        cx.reset()
     })
 }
