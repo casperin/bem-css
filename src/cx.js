@@ -25,8 +25,8 @@ function newCx(opt) {
         }
         let result = elem ? block + "__" + elem : block
         const base = result
-        for (const m of mods || []) {
-            result += " " + base + "--" + m
+        for (var i = 0; i < (mods || []).length; i++) {
+            result += " " + base + "--" + mods[i]
         }
         if (process.env.NODE_ENV !== "production" && opt.strict) {
             checkIfExists(block, elem, mods, opt)
@@ -48,7 +48,8 @@ function checkIfExists(block, elem, mods, opt) {
     }
     if (!elem) {
         if (mods) {
-            for (const m of mods) {
+            for (var i = 0; i < (mods || []).length; i++) {
+                const m = mods[i]
                 const ms = opt.bemTree[block].modifiers
                 if (!ms || !ms[m]) {
                     opt.warn(
@@ -87,7 +88,8 @@ function checkIfExists(block, elem, mods, opt) {
     if (!mods) {
         return
     }
-    for (const m of mods) {
+    for (var i = 0; i < (mods || []).length; i++) {
+        const m = mods[i]
         const em = opt.bemTree[block].elements[elem].modifiers
         if (!em || !em[m]) {
             opt.warn(
