@@ -56,7 +56,7 @@ module.exports = async function make(p, opt = {}) {
         warnings.push(...warnings_)
 
         const nameWithPrefix = opt.blockPrefix
-            ? opt.blockPrefix + '-' + name
+            ? opt.blockPrefix + "-" + name
             : name
         bemClasses[nameWithPrefix] = makeBemTree(block)
     }
