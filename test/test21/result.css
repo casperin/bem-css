@@ -1,0 +1,7 @@
+.foo:hover .foo__el--blue.foo__el--small {
+    color: red;
+}
+.foo:hover .foo__el--blue.foo__el--small:focus,
+.foo:hover .foo__el--blue.foo__el--small:active {
+    color: green;
+}

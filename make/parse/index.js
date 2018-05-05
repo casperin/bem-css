@@ -9,6 +9,7 @@ const makeParser = require("./parseCss")
 
 module.exports = function parse(name, block, opt) {
     const prefix = opt.blockPrefix ? `.${opt.blockPrefix}-` : `.`
+    const modifierSplitter = opt.modifierSplitter || " "
     const sel = prefix + name
     const sels = [sel]
     const csss = []
@@ -31,7 +32,7 @@ module.exports = function parse(name, block, opt) {
         for (const pseudo of element.pseudos) {
             s = combinations(
                 [sels, element.names, pseudo.names],
-                (b, n, p) => `${b} ${b}__${n}${p}`
+                (b, e, p) => `${b} ${b}__${e}${p}`
             )
             parse(s, pseudo.csss)
         }
@@ -40,7 +41,10 @@ module.exports = function parse(name, block, opt) {
         for (const modifier of element.modifiers) {
             s = combinations(
                 [sels, element.names, modifier.names],
-                (b, n, p) => `${b} ${b}__${n}--${p}`
+                (b, e, m) => {
+                    const bem = m.split(modifierSplitter).map(m => `${b}__${e}--${m}`).join("")
+                    return `${b} ${bem}`
+                }
             )
             parse(s, modifier.csss)
 
@@ -48,7 +52,10 @@ module.exports = function parse(name, block, opt) {
             for (const pseudo of modifier.pseudos) {
                 s = combinations(
                     [sels, element.names, modifier.names, pseudo.names],
-                    (b, e, m, p) => `${b} ${b}__${e}--${m}${p}`
+                    (b, e, m, p) => {
+                        const bem = m.split(modifierSplitter).map(m => `${b}__${e}--${m}`).join("")
+                        return `${b} ${bem}${p}`
+                    }
                 )
                 parse(s, pseudo.csss)
             }
@@ -84,7 +91,10 @@ module.exports = function parse(name, block, opt) {
             for (const modifier of element.modifiers) {
                 s = combinations(
                     [sels, pseudo.names, element.names, modifier.names],
-                    (b, p, e, m) => `${b}${p} ${b}__${e}--${m}`
+                    (b, p, e, m) => {
+                        const bem = m.split(modifierSplitter).map(m => `${b}__${e}--${m}`).join("")
+                        return `${b}${p} ${bem}`
+                    }
                 )
                 parse(s, modifier.csss)
 
@@ -98,7 +108,10 @@ module.exports = function parse(name, block, opt) {
                             modifier.names,
                             ePseudo.names
                         ],
-                        (b, p, e, m, mp) => `${b}${p} ${b}__${e}--${m}${mp}`
+                        (b, p, e, m, mp) => {
+                            const bem = m.split(modifierSplitter).map(m => `${b}__${e}--${m}`).join("")
+                            return `${b}${p} ${bem}${mp}`
+                        }
                     )
                     parse(s, ePseudo.csss)
                 }
@@ -111,14 +124,20 @@ module.exports = function parse(name, block, opt) {
      */
     for (const modifier of block.modifiers) {
         // .b--m
-        s = combinations([sels, modifier.names], (b, m) => `${b}--${m}`)
+        s = combinations(
+            [sels, modifier.names],
+            (b, m) => m.split(modifierSplitter).map(m => `${b}--${m}`).join("")
+        )
         parse(s, modifier.csss)
 
         for (const element of modifier.elements) {
             // .b--m .b__e
             s = combinations(
                 [sels, modifier.names, element.names],
-                (b, m, e) => `${b}--${m} ${b}__${e}`
+                (b, m, e) => {
+                    const bm = m.split(modifierSplitter).map(m => `${b}--${m}`).join("")
+                    return `${bm} ${b}__${e}`
+                }
             )
             parse(s, element.csss)
 
@@ -126,7 +145,10 @@ module.exports = function parse(name, block, opt) {
             for (const pseudo of element.pseudos) {
                 s = combinations(
                     [sels, modifier.names, element.names, pseudo.names],
-                    (b, m, e, p) => `${b}--${m} ${b}__${e}${p}`
+                    (b, m, e, p) => {
+                        const bm = m.split(modifierSplitter).map(m => `${b}--${m}`).join("")
+                        return `${bm} ${b}__${e}${p}`
+                    }
                 )
                 parse(s, pseudo.csss)
             }
@@ -135,7 +157,11 @@ module.exports = function parse(name, block, opt) {
             for (const eModifier of element.modifiers) {
                 s = combinations(
                     [sels, modifier.names, element.names, eModifier.names],
-                    (b, m, e, em) => `${b}--${m} ${b}__${e}--${em}`
+                    (b, m, e, em) => {
+                        const bm = m.split(modifierSplitter).map(m => `${b}--${m}`).join("")
+                        const bem = em.split(modifierSplitter).map(em => `${b}__${e}--${em}`).join("")
+                        return `${bm} ${bem}`
+                    }
                 )
                 parse(s, eModifier.csss)
 
@@ -149,7 +175,11 @@ module.exports = function parse(name, block, opt) {
                             eModifier.names,
                             ePseudo.names
                         ],
-                        (b, m, e, em, ep) => `${b}--${m} ${b}__${e}--${em}${ep}`
+                        (b, m, e, em, ep) => {
+                            const bm = m.split(modifierSplitter).map(m => `${b}--${m}`).join("")
+                            const bem = em.split(modifierSplitter).map(em => `${b}__${e}--${em}`).join("")
+                            return `${bm} ${bem}${ep}`
+                        }
                     )
                     parse(s, ePseudo.csss)
                 }
@@ -160,7 +190,10 @@ module.exports = function parse(name, block, opt) {
             // .b--m:p
             s = combinations(
                 [sels, modifier.names, pseudo.names],
-                (b, m, p) => `${b}--${m}${p}`
+                (b, m, p) => {
+                    const bm = m.split(modifierSplitter).map(m => `${b}--${m}`).join("")
+                    return `${bm}${p}`
+                }
             )
             parse(s, pseudo.csss)
 
@@ -168,7 +201,10 @@ module.exports = function parse(name, block, opt) {
                 // .b--m:p .b__e
                 s = combinations(
                     [sels, modifier.names, pseudo.names, element.names],
-                    (b, m, p, e) => `${b}--${m}${p} ${b}__${e}`
+                    (b, m, p, e) => {
+                        const bm = m.split(modifierSplitter).map(m => `${b}--${m}`).join("")
+                        return `${bm}${p} ${b}__${e}`
+                    }
                 )
                 parse(s, element.csss)
 
@@ -182,7 +218,10 @@ module.exports = function parse(name, block, opt) {
                             element.names,
                             ePseudo.names
                         ],
-                        (b, m, p, e, ep) => `${b}--${m}${p} ${b}__${e}${ep}`
+                        (b, m, p, e, ep) => {
+                            const bm = m.split(modifierSplitter).map(m => `${b}--${m}`).join("")
+                            return `${bm}${p} ${b}__${e}${ep}`
+                        }
                     )
                     parse(s, ePseudo.csss)
                 }
@@ -197,7 +236,11 @@ module.exports = function parse(name, block, opt) {
                             element.names,
                             eModifier.names
                         ],
-                        (b, m, p, e, em) => `${b}--${m}${p} ${b}__${e}--${em}`
+                        (b, m, p, e, em) => {
+                            const bm = m.split(modifierSplitter).map(m => `${b}--${m}`).join("")
+                            const bem = em.split(modifierSplitter).map(em => `${b}__${e}--${em}`).join("")
+                            return `${bm}${p} ${bem}`
+                        }
                     )
                     parse(s, eModifier.csss)
 
@@ -212,8 +255,11 @@ module.exports = function parse(name, block, opt) {
                                 eModifier.names,
                                 ePseudo.names
                             ],
-                            (b, m, p, e, em, ep) =>
-                                `${b}--${m}${p} ${b}__${e}--${em}${ep}`
+                            (b, m, p, e, em, ep) => {
+                                const bm = m.split(modifierSplitter).map(m => `${b}--${m}`).join("")
+                                const bem = em.split(modifierSplitter).map(em => `${b}__${e}--${em}`).join("")
+                                return `${bm}${p} ${bem}${ep}`
+                            }
                         )
                         parse(s, ePseudo.csss)
                     }

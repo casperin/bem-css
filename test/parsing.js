@@ -20,6 +20,13 @@ const tests = [
     ["test12", "Warns if files with same name", { warn: true }],
     ["test13", "Can handle multiple elements"],
     ["test14", "Can handle multiple pseudos"],
+    ["test15", "block--mod1.block--mod2"],
+    ["test16", "block--mod1.block--mod2 block__el"],
+    ["test17", "block--mod1.block--mod2 block__el--mod3.block__el--mod4"],
+    ["test18", "block--mod1.block--mod2:pseudo block__el"],
+    ["test19", "block--mod1.block--mod2:pseudo block__el--mod3.block__el--mod4"],
+    ["test20", "block block__el--mod1.block__el--mod2"],
+    ["test21", "block:pseudo block__el--mod1.block__el--mod2"],
     ["_gone_", "Errors if not given a path to a dir", { error: true }],
     [
         "css-prop-undefined",

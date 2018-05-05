@@ -1,0 +1,3 @@
+.foo--red.foo--large:hover .foo__el:focus {
+    color: green;
+}

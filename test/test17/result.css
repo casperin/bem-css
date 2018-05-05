@@ -1,0 +1,6 @@
+.foo--red.foo--large .foo__el--blue.foo__el--small {
+    color: green;
+}
+.foo--red.foo--large .foo__el--blue.foo__el--small:hover {
+    color: orange;
+}

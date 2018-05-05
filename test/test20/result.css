@@ -1,0 +1,7 @@
+.foo .foo__el--blue.foo__el--small {
+    color: red;
+}
+.foo .foo__el--blue.foo__el--small:focus,
+.foo .foo__el--blue.foo__el--small:active {
+    color: green;
+}
